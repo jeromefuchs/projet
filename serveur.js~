@@ -9,12 +9,13 @@ var options = {
 };
 
 var app = express();
+app.use(express.static('public'));
 
 app.get('/', function(req, res){
   res.sendfile('public/index.html');
 });
 
 // Create an HTTPS service identical to the HTTP service.
-https.createServer(options, app).listen(1580, function () {
+https.createServer(options, app).listen(5680, function () {
 	console.log("demarre");
 });
