@@ -9,26 +9,45 @@
 	<script type="text/javascript" src="Paper/docs/assets/js/paper.js"></script>
 	<!-- Define inlined PaperScript associate it with myCanvas -->
 	<script type="text/paperscript" canvas="myCanvas">
-		var myCircle = new Path.Circle(new Point(100, 100), 10);
-		myCircle.fillColor = 'black';
-
-		//définie la destination 
-		var vector = Point.random();
-		vector.length=5;
-
-		function onFrame(event) {
-			myCircle.translate(vector);
+		var tab=new Array();		
+		
+		for(var a=0;a<75;a++){
+			var myCircle = new Path.Circle(new Point(100-(a*7.5),50), 2);
+			myCircle.fillColor = 'pink';
+			tab.push(myCircle);
 		}
 
-		function onMouseDown(event){
-			vector =  event.point - myCircle.position;
+		//définie la destination 
+		var vector = Point.random()*view.size;
+		vector.length=2.5;
+		var vectorinter;
+
+		function onFrame(event)
+		{
+			for(var i=tab.length-1;i>=0;i--)
+			{
+				if(i==0)
+				{
+					tab[0].translate(vector);
+					 
+				}
+				else
+				{
+					vectorinter = tab[i-1].position-tab[i].position;
+					tab[i].translate(vectorinter);			
+				}
+			}
+		}
+
+		function onMouseDown(event){			
+			vector = event.point-tab[0].position;
 			vector.length=5;
 		}
 	</script>
 </head>
 <body>
 	<p> wesh morray, bien ou bien ?</p>
-	<!--<img src='pfudor.gif'><head>-->
+	<img src='pfudor.gif'><head>
 	<p>...</p>
 	<canvas id="myCanvas" style="width:100%;height:100%;"></canvas>	
 </body>
