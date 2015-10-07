@@ -34,7 +34,7 @@ var http = require('https').createServer(options, app).listen(5685, function() {
   , express = require('express')
   , app = express()
   , port = 5865
-  , var clients = new Array(5,2);
+  , clients = new Array(5,2);
 
 
 app.use(express.static('public'));

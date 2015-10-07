@@ -9,7 +9,9 @@
 	<script type="text/javascript" src="Paper/docs/assets/js/paper.js"></script>
 	<!-- Define inlined PaperScript associate it with myCanvas -->
 	<script type="text/paperscript" canvas="myCanvas">
-		var tab=new Array();		
+		var tab=new Array();
+		co();
+		var connection = new WebSocket('ws://localhost:5865');
 		
 		for(var a=0;a<30;a++){
 			var myCircle = new Path.Circle(new Point(100-(a*7.5),50), 7);
@@ -40,37 +42,15 @@
 				}
 			}
 		}
-
 		function onMouseDown(event){			
-			vector = event.point-tab[0].position;
-			vector.length=2.5;
-		}
-
+				connection.send(event.point);
+			}
+		
 		function poppingApple()
 		{
 			var Apple = new Path.Circle(Point.random*view.size,4);
 			Apple.fillColor = 'red';
-		}
-		function routine()
-		{
-			// if user is running mozilla then use it's built-in WebSocket
-			window.WebSocket = window.WebSocket || window.MozWebSocket;
-		    
-			// if browser doesn't support WebSocket, just show some notification and exit
-			if (!window.WebSocket) {
-			    content.html($('<p>', { text: 'Sorry, but your browser doesn\'t '
-							+ 'support WebSockets.'} ));
-			    input.hide();
-			    $('span').hide();
-			    return;
-			}
-			
-			connection.on('message', function(message) {
-
-
-			}
-			    
-		      
+		}     
 		}
 	</script>
 </head>

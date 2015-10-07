@@ -26,7 +26,6 @@
 
 		function onFrame(event)
 		{
-			poppingApple();
 			for(var i=tab.length-1;i>=0;i--)
 			{
 				if(i==0)
@@ -42,15 +41,38 @@
 			}
 		}
 
-		function onMouseDown(event){			
-			vector = event.point-tab[0].position;
-			vector.length=2.5;
-		}
+		
 
 		function poppingApple()
 		{
 			var Apple = new Path.Circle(Point.random*view.size,4);
 			Apple.fillColor = 'red';
+		}
+		function routine()
+		{
+			// if user is running mozilla then use it's built-in WebSocket
+			window.WebSocket = window.WebSocket || window.MozWebSocket;
+		    
+			// if browser doesn't support WebSocket, just show some notification and exit
+			if (!window.WebSocket) {
+			    content.html($('<p>', { text: 'Sorry, but your browser doesn\'t '
+							+ 'support WebSockets.'} ));
+			    input.hide();
+			    $('span').hide();
+			    return;
+			}
+			
+			var connection = new WebSocket('ws://127.0.0.1:1337');
+			
+			connection.on('message', function(message) {
+			
+			function onMouseDown(event){			
+				connection.send(event.point);
+			}
+
+			}
+			    
+		      
 		}
 	</script>
 </head>
