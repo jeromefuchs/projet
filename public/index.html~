@@ -11,8 +11,8 @@
 	<script type="text/paperscript" canvas="myCanvas">
 		var tab=new Array();		
 		
-		for(var a=0;a<75;a++){
-			var myCircle = new Path.Circle(new Point(100-(a*7.5),50), 2);
+		for(var a=0;a<30;a++){
+			var myCircle = new Path.Circle(new Point(100-(a*7.5),50), 7);
 			myCircle.fillColor = 'pink';
 			tab.push(myCircle);
 		}
@@ -22,8 +22,11 @@
 		vector.length=2.5;
 		var vectorinter;
 
+		poppingApple();
+
 		function onFrame(event)
 		{
+			poppingApple();
 			for(var i=tab.length-1;i>=0;i--)
 			{
 				if(i==0)
@@ -34,7 +37,6 @@
 				else
 				{
 					vectorinter = tab[i-1].position-tab[i].position;
-					vectorinter.length=2.5;
 					tab[i].translate(vectorinter);			
 				}
 			}
@@ -42,7 +44,13 @@
 
 		function onMouseDown(event){			
 			vector = event.point-tab[0].position;
-			vector.length=5;
+			vector.length=2.5;
+		}
+
+		function poppingApple()
+		{
+			var Apple = new Path.Circle(Point.random*view.size,4);
+			Apple.fillColor = 'red';
 		}
 	</script>
 </head>

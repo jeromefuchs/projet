@@ -11,8 +11,8 @@
 	<script type="text/paperscript" canvas="myCanvas">
 		var tab=new Array();		
 		
-		for(var a=0;a<75;a++){
-			var myCircle = new Path.Circle(new Point(100-(a*7.5),50), 2);
+		for(var a=0;a<30;a++){
+			var myCircle = new Path.Circle(new Point(100-(a*7.5),50), 7);
 			myCircle.fillColor = 'pink';
 			tab.push(myCircle);
 		}
@@ -21,6 +21,8 @@
 		var vector = Point.random()*view.size;
 		vector.length=2.5;
 		var vectorinter;
+
+		poppingApple();
 
 		function onFrame(event)
 		{
@@ -41,7 +43,34 @@
 
 		function onMouseDown(event){			
 			vector = event.point-tab[0].position;
-			vector.length=5;
+			vector.length=2.5;
+		}
+
+		function poppingApple()
+		{
+			var Apple = new Path.Circle(Point.random*view.size,4);
+			Apple.fillColor = 'red';
+		}
+		function routine()
+		{
+			// if user is running mozilla then use it's built-in WebSocket
+			window.WebSocket = window.WebSocket || window.MozWebSocket;
+		    
+			// if browser doesn't support WebSocket, just show some notification and exit
+			if (!window.WebSocket) {
+			    content.html($('<p>', { text: 'Sorry, but your browser doesn\'t '
+							+ 'support WebSockets.'} ));
+			    input.hide();
+			    $('span').hide();
+			    return;
+			}
+			
+			connection.on('message', function(message) {
+
+
+			}
+			    
+		      
 		}
 	</script>
 </head>
