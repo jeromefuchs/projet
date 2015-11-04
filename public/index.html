@@ -9,54 +9,105 @@
 	<script type="text/javascript" src="Paper/docs/assets/js/paper.js"></script>
 	<!-- Define inlined PaperScript associate it with myCanvas -->
 	<script type="text/paperscript" canvas="myCanvas">
-		var tab=new Array();
-		co();
-		var connection = new WebSocket('ws://localhost:5865');
-		
-		for(var a=0;a<30;a++){
-			var myCircle = new Path.Circle(new Point(100-(a*7.5),50), 7);
-			myCircle.fillColor = 'pink';
-			tab.push(myCircle);
-		}
+		ws = new WebSocket('wss://localhost:5685');
+//console.log('server cree');
 
-		//définie la destination 
-		var vector = Point.random()*view.size;
-		vector.length=2.5;
-		var vectorinter;
+ws.onopen = function (event) 
+{
+  	//console.log('Connecte au server');
+};
 
-		poppingApple();
+var color1 = new Color(Math.random(), Math.random(), Math.random());
+var color2 = new Color(Math.random(), Math.random(), Math.random());
+var myBall=[];
+var Ball=[];
+var monserpent;
+var autreserpent;
 
-		function onFrame(event)
-		{
-			for(var i=tab.length-1;i>=0;i--)
-			{
-				if(i==0)
-				{
-					tab[0].translate(vector);
-					 
-				}
-				else
-				{
-					vectorinter = tab[i-1].position-tab[i].position;
-					tab[i].translate(vectorinter);			
-				}
+
+
+
+var from = new Point(0, 0);
+var to = new Point(1200, 800);
+var rect = new Path.Rectangle(from, to);
+rect.strokeColor = 'black';
+
+var vectorDir =to* Point.random();
+vectorDir.length = 5;
+
+
+function onMouseDown(event) {
+	vectorDir = event.point - myBall[0].position;
+	vectorDir.length = 5;
+	var message = { 
+				type : "tete",
+				x : vectorDir.x,
+				y : vectorDir.y
+			};
+	ws.send(JSON.stringify(message));
+console.log('tete envoyé');
+}
+
+function onFrame(event) {
+ws.onmessage = function (message) 
+{ 
+	
+	var msg = JSON.parse(message.data);
+
+	
+	switch(msg.type)
+	{	
+		case "creeserpents" :
+			console.log( msg);
+			monserpent = msg.Serpent1;
+			autreserpent = msg.Serpent2;
+			
+			for (var i=0; i<monserpent.length;i++){
+				var cercle=new Path.Circle(monserpent[i].x,monserpent[i].y, 20);
+				cercle.fillColor= color1;
+				myBall.push(cercle);
+				
 			}
-		}
-		function onMouseDown(event){			
-				connection.send(event.point);
+			for (var i=0; i<autreserpent.length;i++){
+				var cercle=new Path.Circle(autreserpent[i].x,autreserpent[i].y, 20);
+				cercle.fillColor= color2;
+				Ball.push(cercle);
+				
 			}
-		
-		function poppingApple()
-		{
-			var Apple = new Path.Circle(Point.random*view.size,4);
-			Apple.fillColor = 'red';
-		}     
-		}
+
+		case "majserpents" :
+			//console.log( msg.Serpent1[0], msg.Serpent2[0]);
+			
+
+			for (var i=0; i< msg.Serpent1.length;i++){
+				myBall[i].position.x = msg.Serpent1[i].x;
+				myBall[i].position.y = msg.Serpent1[i].y;
+			}
+			for (var i=0; i< msg.Serpent2.length;i++){
+				Ball[i].position.x = msg.Serpent2[i].x;
+				Ball[i].position.y = msg.Serpent2[i].y;
+			}
+
+
+		case "delserpents" :
+
+			for (var i=0; i< msg.Serpent1.length;i++){
+				msg.Serpent1[i].delete;
+			}
+			for (var i=0; i< msg.Serpent2.length;i++){
+				msg.Serpent2[i].delete;
+			}	
+			
+	}
+
+};
+
+
+}
 	</script>
 </head>
 <body>
 	<p> wesh morray, bien ou bien ?</p>
-	<img src='pfudor.gif'><head>
 	<p>...</p>
 	<canvas id="myCanvas" style="width:100%;height:100%;"></canvas>	
 </body>
